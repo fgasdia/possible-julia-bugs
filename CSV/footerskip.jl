@@ -16,9 +16,21 @@ open("bar_n.csv", "w") do io
     @printf(io, "and this line\n")
 end
 
-# BROKEN: In linux, this reads rows 1, 2, 3, and "ignore this line"
+# BROKEN: In Windows and Linux, this reads rows 1, 2, 3, and "ignore this line"
 CSV.File("bar_n.csv"; skipto=1, footerskip=2)
 
+# It's also broken if ending in "\r\n"
+open("bar_rn.csv", "w") do io
+    @printf(io, "1, a\r\n")
+    @printf(io, "2, b\r\n")
+    @printf(io, "3, c\r\n")
+    @printf(io, "ignore this line\r\n")
+    @printf(io, "\r\n")
+    @printf(io, "and this line\r\n")
+end
+
+# BROKEN: In Windows and Linux, this reads rows 1, 2, 3, and "ignore this line"
+CSV.File("bar_rn.csv"; skipto=1, footerskip=2)
 
 
 
@@ -31,7 +43,7 @@ open("foo_n.csv", "w") do io
     @printf(io, "\n")
 end
 
-# BROKEN: on Linux, this reads rows 1, 2, 3, 4
+# BROKEN: on Windows and Linux, this reads rows 1, 2, 3, 4
 CSV.File("foo_n.csv"; skipto=1, footerskip=1)
 
 
@@ -56,7 +68,7 @@ open("foo2_n.csv", "w") do io
     @printf(io, "4, d\n")
 end
 
-# WORKING: on Linux, this reads rows 1, 2, 3
+# WORKING: on Windows and Linux, this reads rows 1, 2, 3
 CSV.File("foo2_n.csv"; skipto=1, footerskip=1)
 
 
@@ -68,5 +80,5 @@ open("foo2_rn.csv", "w") do io
     @printf(io, "4, d\r\n")
 end
 
-# WORKING: on Linux, this reads rows 1, 2, 3
+# WORKING: on Windows and Linux, this reads rows 1, 2, 3
 CSV.File("foo2_rn.csv"; skipto=1, footerskip=1)
