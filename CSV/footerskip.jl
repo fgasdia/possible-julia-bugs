@@ -36,9 +36,12 @@ end
 # UNEXPECTED: on Windows and Linux, this reads rows 1, 2, 3, and "ignore this line"
 CSV.File("bar_rn.csv"; skipto=1, footerskip=2)
 
-# To work on Linux, set footerskip=3
-# BROKEN: on Windows, this reads rows 1, 2, 3, and "ignore this line". Needs footerskip=4
+# BROKEN: on Windows and Linux, this reads rows 1, 2, 3, and "ignore this line". Needs footerskip=4
 CSV.File("bar_rn.csv"; skipto=1, footerskip=3)
+
+
+
+
 
 
 # Trying to get at actual issue...
