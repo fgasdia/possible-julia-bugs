@@ -16,10 +16,11 @@ open("bar_n.csv", "w") do io
     @printf(io, "and this line\n")
 end
 
-# UNEXPECTED: In Windows and Linux, this reads rows 1, 2, 3, and "ignore this line"
+# UNEXPECTED: on Windows and Linux, this reads rows 1, 2, 3, and "ignore this line"
 CSV.File("bar_n.csv"; skipto=1, footerskip=2)
 
-# To work on Linux, set footerskip=3 
+# To work on Linux, set footerskip=3
+# BROKEN: on Windows, this still reads 1, 2, 3, "ignore this line". Needs footerskip=4
 CSV.File("bar_n.csv"; skipto=1, footerskip=3)
 
 # Now ending in "\r\n"
@@ -32,10 +33,11 @@ open("bar_rn.csv", "w") do io
     @printf(io, "and this line\r\n")
 end
 
-# UNEXPECTED: In Windows and Linux, this reads rows 1, 2, 3, and "ignore this line"
+# UNEXPECTED: on Windows and Linux, this reads rows 1, 2, 3, and "ignore this line"
 CSV.File("bar_rn.csv"; skipto=1, footerskip=2)
 
 # To work on Linux, set footerskip=3
+# BROKEN: on Windows, this reads rows 1, 2, 3, and "ignore this line". Needs footerskip=4
 CSV.File("bar_rn.csv"; skipto=1, footerskip=3)
 
 
@@ -54,6 +56,7 @@ end
 CSV.File("foo_n.csv"; skipto=1, footerskip=1)
 
 # To work on Linux, set footerskip=2. Now reads rows 1, 2, 3
+# BROKEN: on Windows, this reads rows 1, 2, 3, 4. Needs footerskip=3
 CSV.File("foo_n.csv"; skipto=1, footerskip=2)
 
 # But inconsistency with ending "\r\n"
@@ -69,7 +72,7 @@ end
 # (same behavior as "\n" ending)
 CSV.File("foo_rn.csv"; skipto=1, footerskip=1)
 
-# BROKEN: on Linux, this reads rows 1, 2, 3, 4
+# BROKEN: on Windows and Linux, this reads rows 1, 2, 3, 4. Needs footerskip=3
 # (different behavior from "\n" ending)
 CSV.File("foo_rn.csv"; skipto=1, footerskip=2)
 
